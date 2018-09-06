@@ -1,0 +1,14 @@
+#!/bin/bash
+
+NGINX_CONF_DIR="/etc/nginx"
+NGINX_SITES_AVAILABLE="$NGINX_CONF_DIR/sites-available"
+NGINX_SITES_ENABLED="$NGINX_CONF_DIR/sites-enabled"
+SELECTED_SITE="$1"
+
+for vhost in `ls "$NGINX_SITES_AVAILABLE" | grep -v '\-ssl' | sed 's/\.conf//'`
+do
+  { [[ -e "$NGINX_SITES_ENABLED/$vhost.conf" ]] && printf '+ ' || printf '- '; }
+  { [[ -e "$NGINX_SITES_ENABLED/$vhost-ssl.conf" ]] && printf '[+ssl] ' || { 
+      [[ -e "$NGINX_SITES_AVAILABLE/$vhost-ssl.conf" ]] && printf '[-ssl] ' || printf '       '; } }
+  echo "$vhost"
+done
