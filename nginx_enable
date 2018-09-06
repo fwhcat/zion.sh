@@ -1,0 +1,18 @@
+#!/bin/bash
+
+NGINX_CONF_DIR="/etc/nginx"
+NGINX_SITES_AVAILABLE="$NGINX_CONF_DIR/sites-available"
+NGINX_SITES_ENABLED="$NGINX_CONF_DIR/sites-enabled"
+SELECTED_SITE="$1"
+
+[[ ! "$SELECTED_SITE" ]] && { >&2 echo "select a site" && exit 1; }
+
+[[ ! -e "$NGINX_SITES_AVAILABLE/$SELECTED_SITE.conf" ]] && { >&2 echo "Site does not appear to exist." && exit 1; }
+
+[[ -e "$NGINX_SITES_ENABLED/$SELECTED_SITE.conf" ]] && { >&2 echo "Site appears to already be enabled" && exit 1; }
+
+# create symlink
+ln -sf "$NGINX_SITES_AVAILABLE/$SELECTED_SITE.conf" -T "$NGINX_SITES_ENABLED/$SELECTED_SITE.conf"
+
+# reload nginx
+systemctl reload nginx
