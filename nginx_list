@@ -7,8 +7,8 @@ SELECTED_SITE="$1"
 
 for vhost in `ls "$NGINX_SITES_AVAILABLE" | grep -v '\-ssl' | sed 's/\.conf//'`
 do
-  { [[ -e "$NGINX_SITES_ENABLED/$vhost.conf" ]] && printf '+ ' || printf '- '; }
-  { [[ -e "$NGINX_SITES_ENABLED/$vhost-ssl.conf" ]] && printf '[+ssl] ' || { 
-      [[ -e "$NGINX_SITES_AVAILABLE/$vhost-ssl.conf" ]] && printf '[-ssl] ' || printf '       '; } }
-  echo "$vhost"
+    { [[ -e "$NGINX_SITES_ENABLED/$vhost.conf" ]] && printf '+ ' || printf '%s' '- '; }
+    { [[ -e "$NGINX_SITES_ENABLED/$vhost-ssl.conf" ]] && printf '[+ssl] ' ||
+    { [[ -e "$NGINX_SITES_AVAILABLE/$vhost-ssl.conf" ]] && printf '%s' '[-ssl] ' || printf '       '; } }
+    echo "$vhost"
 done
